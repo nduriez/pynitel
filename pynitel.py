@@ -9,6 +9,37 @@ import time
 class Pynitel:
     "Classe de gestion des entrée/sortie vidéotex avec un Minitel"
 
+    # constante de résolution d'écran en mode vidéotex
+    COL_SIZE = 25
+    LINE_SIZE = 40
+
+    # constantes de couleurs
+    NOIR = 0
+    ROUGE = 1
+    VERT = 2
+    JAUNE = 3
+    BLEU = 4
+    MAGENTA = 5
+    CYAN = 6
+    BLANC = 7
+
+    # constantes des touches de fonction du Minitel
+    # en mode Vidéotex ou Mixte
+    ENVOI = 1
+    RETOUR = 2
+    REPETITION = 3
+    GUIDE = 4
+    ANNULATION = 5
+    SOMMAIRE = 6
+    CORRECTION = 7
+    SUITE = 8
+    CONNEXION_FIN = 9
+
+    # constantes des séquences protocole
+    PRO1 = '\x1b\x39'
+    PRO2 = '\x1b\x3a'
+    PRO3 = '\x1b\x3b'
+
     def __init__(self, conn):
         self.ecrans = {'last': None}
         self.conn = conn
@@ -17,33 +48,6 @@ class Pynitel:
         self.laststar = False
         self.zones = []
         self.zonenumber = 0
-
-        # constantes de couleurs
-        self.noir = 0
-        self.rouge = 1
-        self.vert = 2
-        self.jaune = 3
-        self.bleu = 4
-        self.magenta = 5
-        self.cyan = 6
-        self.blanc = 7
-
-        # constantes des touches de fonction du Minitel
-        # en mode Vidéotex ou Mixte
-        self.envoi = 1
-        self.retour = 2
-        self.repetition = 3
-        self.guide = 4
-        self.annulation = 5
-        self.sommaire = 6
-        self.correction = 7
-        self.suite = 8
-        self.connexionfin = 9
-
-        # constantes des séquences protocole
-        self.PRO1 = '\x1b\x39'
-        self.PRO2 = '\x1b\x3a'
-        self.PRO3 = '\x1b\x3b'
 
     def wait(self):
         "Attente d'une connexion"
