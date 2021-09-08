@@ -7,7 +7,7 @@ import time
 
 
 class Pynitel:
-    "Classe de gestion des entrée/sortie vidéotex avec un Minitel"
+    """Classe de gestion des entrée/sortie vidéotex avec un Minitel"""
 
     # constante de résolution d'écran en mode vidéotex
     COL_SIZE = 25
@@ -50,7 +50,7 @@ class Pynitel:
         self.zonenumber = 0
 
     def wait(self):
-        "Attente d'une connexion"
+        """Attente d'une connexion"""
 
         print('ATTENTE')
 
@@ -61,11 +61,11 @@ class Pynitel:
         print('CONNECTION')
 
     def end(self):
-        "Fin de connexion, raccrochage"
+        """Fin de connexion, raccrochage"""
         self.conn.write(b'\x1b9g')
 
     def _if(self):
-        "Dernier caractère reçu"
+        """Dernier caractère reçu"""
         data = self.conn.read()
         if not data:
             return None
@@ -73,22 +73,22 @@ class Pynitel:
             return data
 
     def clear(self):
-        "Efface le buffer de réception"
+        """Efface le buffer de réception"""
         self.conn.settimeout(0)  # timeout de 2 minutes pour les saisies...
         self.conn.recv(10000)
 
     def home(self):
-        "Efface écran et ligne 0"
+        """Efface écran et ligne 0"""
         self._del(0, 1)
         self.sendchr(12)  # FF
         self.cursor(False)  # Coff
 
     def vtab(self, ligne):
-        "Positionne le curseur sur un début de ligne"
+        """Positionne le curseur sur un début de ligne"""
         self.pos(ligne, 1)
 
     def pos(self, ligne, colonne=1):
-        "Positionne le curseur sur une ligne / colonne"
+        """Positionne le curseur sur une ligne / colonne"""
         if ligne == 1 and colonne == 1:
             self.sendchr(30)
         else:
@@ -97,22 +97,24 @@ class Pynitel:
             self.sendchr(64+colonne)
 
     def _del(self, ligne, colonne):
-        "Effacement jusque fin de ligne"
+        """Effacement jusque fin de ligne"""
         self.pos(ligne, colonne)
         self.sendchr(24)
 
     def normal(self):
-        "Passage en vidéo normale"
+        """Passage en vidéo normale"""
         self.sendesc('I')
 
     def backcolor(self, couleur):
         """Change la couleur de fond,
-        à valider par un espace pour le texte (identique à HCOLOR)"""
+        à valider par un espace pour le texte (identique à HCOLOR)
+        """
         self.sendesc(chr(80+couleur))
 
     def canblock(self, debut, fin, colonne, inverse=False):
         """Efface un rectangle sur l'écran,
-        compris entre deux lignes et après une colonne"""
+        compris entre deux lignes et après une colonne
+        """
         if inverse is False:
             self.pos(debut, colonne)
             self.sendchr(24)
@@ -127,21 +129,21 @@ class Pynitel:
                 self.sendchr(24)
 
     def caneol(self, ligne, colonne):
-        "Efface la fin de ligne derrière la colonne spécifiée"
+        """Efface la fin de ligne derrière la colonne spécifiée"""
         self.pos(ligne, colonne)
         self.sendchr(24)  # CAN
 
     def cls(self):
-        "Efface l'écran du Minitel"
+        """Efface l'écran du Minitel"""
         self.home()
 
     def color(self, couleur):
-        "Change la couleur du texte ou graphique"
+        """Change la couleur du texte ou graphique"""
         self.sendesc(chr(64+couleur))
 
     # curpos - donne la position actuelle du curseur du Minitel
     def cursor(self, visible):
-        "Permet de rendre apparent ou invisible le curseur clignotant"
+        """Permet de rendre apparent ou invisible le curseur clignotant"""
         if visible == 1 or visible is True:
             self.sendchr(17)  # Con
         else:
@@ -149,7 +151,7 @@ class Pynitel:
 
     # dial - appel un numéro de téléphone
     def draw(self, num=0):
-        "Envoi un écran préchargé dans un buffer vers le minitel"
+        """Envoi un écran préchargé dans un buffer vers le minitel"""
         if num is None:
             num = self.ecrans['last']
         self.ecrans['last'] = num
@@ -157,24 +159,24 @@ class Pynitel:
             self.conn.write(self.ecrans[num])
 
     def drawscreen(self, fichier):
-        "Envoi du contenu d'un fichier"
+        """Envoi du contenu d'un fichier"""
         with open(fichier, 'rb') as f:
             self.conn.write(f.read())
 
     def flash(self, clignote=True):
-        "Passage en clignotant"
+        """Passage en clignotant"""
         if clignote is None or clignote is True or clignote == 1:
             self.sendesc('\x48')
         else:
             self.sendesc('\x49')
 
     def forecolor(self, couleur):
-        "Change la couleur des caractères"
+        """Change la couleur des caractères"""
         self.color(couleur)
 
     def get(self):
-        "Rend le contenu du buffer de saisie actuel"
-        return(self.conn.read(self.conn.in_waiting).decode())
+        """Rend le contenu du buffer de saisie actuel"""
+        return self.conn.read(self.conn.in_waiting).decode()
 
     # getid - lecture ROM/RAM Minitel
     def getid(self):
@@ -182,12 +184,12 @@ class Pynitel:
         return
 
     def hcolor(self, couleur):
-        "Change la couleur de fond, à valider par un espace pour le texte"
+        """Change la couleur de fond, à valider par un espace pour le texte"""
         self.sendesc(chr(80+couleur))
 
     def input(self, ligne, colonne, longueur, data='',
               caractere='.', redraw=True):
-        "Gestion de zone de saisie"
+        """Gestion de zone de saisie"""
         # affichage initial
         if redraw:
             self.sendchr(20)  # Coff
@@ -233,14 +235,14 @@ class Pynitel:
                 data = data + c
 
     def inverse(self, inverse=1):
-        "Passage en inverse"
+        """Passage en inverse"""
         if inverse is None or inverse == 1 or inverse is True:
             self.sendesc('\x5D')
         else:
             self.sendesc('\x5C')
 
     def locate(self, ligne, colonne):
-        "Positionne le curseur"
+        """Positionne le curseur"""
         self.pos(ligne, colonne)
 
     # lower - clavier en mode minuscule / majuscule (mode "Enseignement")
@@ -274,7 +276,7 @@ class Pynitel:
     def starflag(self):
         """Indique si la dernière saisie s'est terminée par une étoile
         + touche de fonction"""
-        return(self.laststar)
+        return self.laststar
 
     # status - Etat du modem
 
@@ -283,14 +285,14 @@ class Pynitel:
     # sysparm - Paramètres du modem
 
     def underline(self, souligne=True):
-        "Passe en mode souligné ou normal"
+        """Passe en mode souligné ou normal"""
         if souligne is None or souligne is True or souligne == 1:
             self.sendesc(chr(90))
         else:
             self.sendesc(chr(89))
 
     def waitzones(self, zone):
-        "Gestion de zones de saisie"
+        """Gestion de zones de saisie"""
         if len(self.zones) == 0:
             return (0, 0)
 
@@ -332,29 +334,29 @@ class Pynitel:
     # waitconnect - attente de CONNECTION
 
     def zone(self, ligne, colonne, longueur, texte, couleur):
-        "Déclaration d'une zone de saisie"
+        """Déclaration d'une zone de saisie"""
         self.zones.append({"ligne": ligne, "colonne": colonne,
                            "longueur": longueur, "texte": texte,
                            "couleur": couleur})
 
     def key(self):
-        "Dernière touche de fonction utilisée sur le Minitel lors d'une saisie"
+        """Dernière touche de fonction utilisée sur le Minitel lors d'une saisie"""
         return self.lastkey
 
     def scale(self, taille):
-        "Change la taille du texte"
+        """Change la taille du texte"""
         self.sendesc(chr(76+taille))
 
     def notrace(self):
-        "Passe en texte souligné, à valider par un espace"
+        """Passe en texte souligné, à valider par un espace"""
         self.sendesc(chr(89))
 
     def trace(self):
-        "Fin de texte souligné, à valider par un espace"
+        """Fin de texte souligné, à valider par un espace"""
         self.sendesc(chr(90))
 
     def plot(self, car, nombre):
-        "Affichage répété d'un caractère"
+        """Affichage répété d'un caractère"""
         if nombre > 1:
             self._print(car)
         if nombre == 2:
@@ -368,39 +370,39 @@ class Pynitel:
             self.sendchr(64+nombre-1)
 
     def text(self):
-        "Mode texte"
+        """Mode texte"""
         self.sendchr(15)
 
     def gr(self):
-        "Mode graphique"
+        """Mode graphique"""
         self.sendchr(14)
 
     def step(self, scroll):
-        "Active ou désactive le mode scrolling"
+        """Active ou désactive le mode scrolling"""
         self.sendesc(':')
         self.sendchr(ord('j')-scroll)
         self.send('C')
 
     def xdraw(self, fichier):
-        "Envoi du contenu d'un fichier"
+        """Envoi du contenu d'un fichier"""
         with open(fichier, 'rb') as f:
             self.conn.write(f.read())
 
     def load(self, num, fichier):
-        "Charge un fichier vidéotex dans un buffer"
+        """Charge un fichier vidéotex dans un buffer"""
         with open(fichier, 'rb') as f:
             data = f.read()
             self.ecrans[num] = data
 
     def read(self):
-        "Lecture de la date et heure"
+        """Lecture de la date et heure"""
         print('read: non implémenté')
 
     def _print(self, texte):
         self.send(self.accents(texte))
 
     def send(self, text):
-        "Envoi de données vers le minitel"
+        """Envoi de données vers le minitel"""
         if self.conn is not None:
             self.conn.write(text.encode())
         else:
@@ -417,7 +419,7 @@ class Pynitel:
         self.sendchr(7)
 
     def accents(self, text):
-        "Conversion des caractères accentués (cf STUM p 103)"
+        """Conversion des caractères accentués (cf STUM p 103)"""
         text = text.replace('à', '\x19\x41a')
         text = text.replace('â', '\x19\x43a')
         text = text.replace('ä', '\x19\x48a')
@@ -462,4 +464,4 @@ class Pynitel:
         text = text.replace('Ù', 'U').replace('Û', 'U').replace('Ü', 'U')
         text = text.replace('Ç', 'C')
 
-        return(text)
+        return text
