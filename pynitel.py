@@ -448,6 +448,10 @@ class Pynitel:
         text = text.replace('↓', '\x19\x2F')
         text = text.replace('̶', '\x60')
         text = text.replace('|', '\x7C')
+        text = text.replace('“', '\"').replace('”', '\"').replace('«', "\"").replace("»", "\"")
+
+        text = text.replace('\n', '\n\x0D')
+        text = text.replace('\f', '\n')
 
         # Caractères accentués inexistants sur Minitel
         text = text.replace('À', 'A').replace('Â', 'A').replace('Ä', 'A')
