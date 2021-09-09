@@ -261,7 +261,6 @@ class Pynitel:
                 self.lastkey = ord(self.conn.read(1).decode())-64
                 return self.lastkey
 
-
     def inverse(self, inverse=1):
         """Passage en inverse"""
         if inverse is None or inverse == 1 or inverse is True:
