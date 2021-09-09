@@ -152,7 +152,7 @@ class Pynitel:
 
         char = self.conn.read(1).decode()
         while char != '\x1F':
-            char = char = self.conn.read(1).decode()
+            char = self.conn.read(1).decode()
 
         x = ord(self.conn.read(1).decode()) - 64
         y = ord(self.conn.read(1).decode()) - 64
