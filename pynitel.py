@@ -10,8 +10,8 @@ class Pynitel:
     """Classe de gestion des entrée/sortie vidéotex avec un Minitel"""
 
     # constante de résolution d'écran en mode vidéotex
-    COL_SIZE = 25
-    LINE_SIZE = 40
+    COL_SIZE = 40
+    LINE_SIZE = 25
 
     # constantes de couleurs
     NOIR = 0
