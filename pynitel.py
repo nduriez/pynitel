@@ -11,7 +11,7 @@ class Pynitel:
 
     # constante de résolution d'écran en mode vidéotex
     COL_SIZE = 40
-    LINE_SIZE = 25
+    LINE_SIZE = 24
 
     # constantes de couleurs
     NOIR = 0
